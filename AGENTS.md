@@ -4,7 +4,7 @@
 
 Plantilla para SPA simples de **1 a 3 páginas**. Todas las páginas comparten el mismo `Layout` (sin navegación/menú). No se usa router anidado ni layouts múltiples.
 
-- Agregar ruta nueva: `<Route path="/ruta" component={Page} />` en `App.tsx`
+- Agregar ruta nueva: Agregar objeto a `routes.ts`
 - Crear página nueva: `src/pages/MiPagina/MiPagina.tsx`
 - Exportar componente: `export function MiPagina()`
 
@@ -204,7 +204,7 @@ src/
     dates.ts            # Funciones de formato de fechas
   pages/                # 1 carpeta = 1 ruta
     Home/
-      Home.tsx          # FormProvider
+      Index.tsx          # FormProvider
       Filtros.tsx       # Filtros con useFormContext + register
       Resultados.tsx    # DataTable con useProducts
       schema.ts         # Esquema Zod con validación cross-field
@@ -212,15 +212,15 @@ src/
     SWRProvider.tsx     # Configuración global de SWR
   types/                # Tipos compartidos
     product.ts          # Product, CreateProductDTO
+  routes.ts             # Definición de rutas con lazy
 ```
 
 ## Reglas de código
 
 - No agregar comentarios a menos que sean necesarios para entender lógica compleja
 - Usar `colorScheme` en los componentes UI para mantener consistencia visual
-- Los formularios con react-hook-form + register
-- Toast para notificaciones
 - Los formularios con react-hook-form + register (sin Controller)
+- Toast para notificaciones
 - Componentes de página van dentro de `pages/<NombrePagina>/` (no en `components/features/`)
 - **No instalar librerías sin preguntar primero.** Si recomiendo una, debo pedir aprobación antes de instalarla.
 - **Usar `pnpm`** para todas las instalaciones.
