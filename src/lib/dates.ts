@@ -6,21 +6,21 @@ const ISO = 'YYYY-MM-DD'
 const FMT_DATE = 'DD/MM/YYYY'
 const FMT_DATETIME = 'DD/MM/YYYY HH:ss'
 
-export function fmtDate(d: DateInput): string {
+export function formatDate(d: DateInput): string {
   if (!d) return ''
   return format(d, FMT_DATE)
 }
 
-export function fmtDateTime(d: DateInput): string {
+export function formatDateTime(d: DateInput): string {
   if (!d) return ''
   return format(d, FMT_DATETIME)
 }
 
-export function todayStr(): string {
+export function getToday(): string {
   return format(new Date(), FMT_DATE)
 }
 
-export function toISO(d: DateInput): string {
+export function toISODate(d: DateInput): string {
   if (!d) return ''
   return format(d, ISO)
 }
