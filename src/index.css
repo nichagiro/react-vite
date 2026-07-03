@@ -1,2 +1,8 @@
 @import "tailwindcss";
 @import "@nichagiro/ui-primitives/style.css";
+
+@layer base {
+  :root {
+    --primary-base: oklch(70.4% 0.123 183);
+  }
+}

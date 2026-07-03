@@ -4,4 +4,6 @@ packages:
 onlyBuiltDependencies: []
 
 minimumReleaseAge: 10080
+minimumReleaseAgeExclude:
+  - '@nichagiro/ui-primitives'
 trustPolicy: no-downgrade

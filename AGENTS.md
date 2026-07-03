@@ -1,3 +1,5 @@
+> **`@nichagiro/ui-primitives`** es nuestra librería UI propia (first-party), mantenida internamente.
+
 # Convenciones del proyecto
 
 ## Scope
