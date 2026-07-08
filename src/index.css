@@ -6,3 +6,12 @@
     --primary-base: oklch(70.4% 0.123 183);
   }
 }
+
+tr[data-striped="odd"] td {
+  background-color: oklch(0.984 0.014 180.72);
+}
+
+th {
+  background-color: oklch(0.953 0.051 180.801);
+  color: #F31260;
+}
