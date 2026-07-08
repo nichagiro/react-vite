@@ -28,6 +28,7 @@ export function Resultados() {
         columns={columns}
         data={products}
         keyExtractor={(row) => row.id}
+        pageSize={10}
         searchable
         striped
         loading={isLoading}

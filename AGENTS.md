@@ -1,4 +1,5 @@
 > **`@nichagiro/ui-primitives`** es nuestra librería UI propia (first-party), mantenida internamente.
+> Storybook: https://nichagiro.github.io/ui-primitives/?path=/docs/ui-button--docs
 
 # Convenciones del proyecto
 
@@ -226,3 +227,77 @@ src/
 - Componentes de página van dentro de `pages/<NombrePagina>/` (no en `components/features/`)
 - **No instalar librerías sin preguntar primero.** Si recomiendo una, debo pedir aprobación antes de instalarla.
 - **Usar `pnpm`** para todas las instalaciones.
+
+## Estándares de estilo visual
+
+### Paleta de colores
+
+| Color | Valor CSS | Uso en componentes |
+|---|---|---|
+| **Primario** | `oklch(70.4% 0.123 183)` (teal/cyan) | `colorScheme="primary"` — header, Panels, botones principales |
+| **Secundario** | El `danger` de la librería (rojo) | `colorScheme="danger"` — botones de acciones importantes/destructivas |
+| **Adicionales** | `success`, `warning`, `info` | Según contexto (alertas, chips, etc.) |
+
+### Layout
+
+- La aplicación **siempre** está envuelta en `<Layout>` (ver `App.tsx`).
+- **Header**: fondo `bg-primary`, texto blanco, centrado, negrita, `text-2xl`, padding `p-3`.
+- **Contenido**: padding horizontal responsivo (`px-4 md:px-6 lg:px-8`), padding vertical `py-4`.
+- **Toaster**: incluido en Layout para notificaciones globales.
+
+### Secciones (Panel)
+
+- Cada sección de una página debe estar dentro de un `<Panel>`.
+- El `title` describe la sección (ej: "Filtros", "Resultados").
+- Usar `colorScheme="primary"`.
+- Separación entre Panels: `<div className="my-5" />`.
+
+```tsx
+<Panel title="Mi Sección" colorScheme="primary">
+  {/* contenido */}
+</Panel>
+```
+
+### Tablas (DataTable)
+
+- `pageSize={10}` — paginación de 10 registros por página.
+- `searchable` — barra de búsqueda/filtro siempre visible.
+- `striped` — filas alternadas para mejorar legibilidad.
+- `loading` — vinculado al estado de carga del hook SWR.
+- `emptyContent` — mensaje cuando no hay registros (opcional; si se omite no se muestra texto).
+
+```tsx
+<DataTable
+  columns={columns}
+  data={items}
+  keyExtractor={(row) => row.id}
+  pageSize={10}
+  searchable
+  striped
+  loading={isLoading}
+/>
+```
+
+### Botones
+
+- **Acciones primarias** (crear, guardar, enviar): `colorScheme="primary"` (teal).
+- **Acciones importantes/destructivas** (eliminar, buscar crítica): `colorScheme="danger"` (rojo = secundario del sistema visual).
+- **Variante**: `variant="solid"` por defecto.
+- **Loading**: usar `loading={isMutating}` durante operaciones asíncronas.
+
+```tsx
+// Acción primaria
+<Button colorScheme="primary">Guardar</Button>
+
+// Acción importante/destructiva
+<Button colorScheme="danger">Eliminar</Button>
+
+// Con estado de carga
+<Button colorScheme="primary" loading={isMutating}>Enviar</Button>
+```
+
+### Estados de carga
+
+- **DataTable**: `loading={isLoading}` — muestra overlay con spinner sobre la tabla.
+- **Botones**: `loading` — muestra spinner inline mientras se procesa la acción.
+- **SWR**: `isLoading` para carga inicial; `isMutating` (creando, actualizando, eliminando) para mutaciones.
