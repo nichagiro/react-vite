@@ -7,7 +7,7 @@ export type Product = {
   images: string[]
 }
 
-export type CreateProductDTO = {
+export type CreateProductPayload = {
   title: string
   price: number
   description: string
@@ -15,7 +15,7 @@ export type CreateProductDTO = {
   images: string[]
 }
 
-export type UpdateProductDTO = {
+export type UpdateProductPayload = {
   id: number
-  data: Partial<CreateProductDTO>
+  data: Partial<CreateProductPayload>
 }

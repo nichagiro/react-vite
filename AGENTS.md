@@ -175,6 +175,40 @@ toast.warning('Advertencia')
 - **Botones**: `loading` — muestra spinner inline mientras se procesa la acción
 - **SWR**: `isLoading` para carga inicial; `isMutating` (creando, actualizando, eliminando) para mutaciones
 
+## Convenciones SWR
+
+### Hooks por entidad
+
+Cada entidad tiene un archivo en `hooks/swr/` con:
+- Un hook de lectura (`useProducts`) usando `useSWR`
+- Hooks de mutación (`useCreateProduct`, `useUpdateProduct`, `useDeleteProduct`) usando `useSWRMutation`
+
+```ts
+const BASE_URL = `${API_URL}/products`
+
+export function useProducts() {
+  const swr = useSWR<Product[]>(BASE_URL)
+  return { ...swr, data: swr.data ?? [] }
+}
+
+export function useCreateProduct() {
+  const { mutate } = useSWRConfig()
+  return useSWRMutation(
+    BASE_URL,
+    async (url, { arg }: { arg: CreateProductPayload }) =>
+      request.post<Product>(url, { data: arg }),
+    { onSuccess: () => mutate(BASE_URL) },
+  )
+}
+```
+
+### Reglas
+
+- **Key = URL completa**: `const BASE_URL = \`${API_URL}/products\``, no usar strings sueltos
+- **Fetcher param `url`**: el primer parámetro del fetcher (`_key`) se nombra `url` y se usa directamente; evita duplicar la URL hardcodeada
+- **Revalidación en `onSuccess`**: `() => mutate(BASE_URL)` para refrescar la lista tras crear/editar/eliminar
+- **Sin try-catch en componentes**: Los errores de `request.ts` son capturados por `SWRProvider` → `onError: (error) => toast.error(error.message)`. No envolver `trigger()` en try-catch.
+
 ## Formularios (react-hook-form)
 
 > `@nichagiro/ui-primitives` expone `ref` en todos sus componentes (heredan de interfaces HTML nativas). No necesitan `Controller`, se usan directamente con `register`.
@@ -233,13 +267,13 @@ src/
   main.tsx              # Entry point
   App.tsx               # Router + Layout
   index.css             # Estilos globales / custom properties
-  api/                  # Endpoints HTTP por entidad
-    url.ts              # Configuración base URL
-    products.ts         # Endpoints de productos
+  config.ts             # API_URL (dominio dinámico)
   components/
     Layout.tsx          # Layout principal
-  hooks/                # Custom hooks con lógica de estado
-    useProducts.ts      # Hook SWR para CRUD de productos
+  hooks/                # Custom hooks
+    swr/                # Hooks SWR por entidad (lectura + mutaciones)
+      useProducts.ts
+    useDebounce.ts      # Hook genérico de debounce
   lib/                  # Utilidades transversales
     request.ts          # Helper genérico fetch + toast + errores
     dates.ts            # Funciones de formato de fechas
@@ -263,6 +297,7 @@ src/
 - Los formularios con react-hook-form + register (sin Controller)
 - Toast para notificaciones
 - Componentes de página van dentro de `pages/<NombrePagina>/` (no en `components/features/`)
+- **No envolver `trigger()` en try-catch.** Los errores son capturados globalmente por `SWRProvider` → toast
 - **No instalar librerías sin preguntar primero.** Si recomiendo una, debo pedir aprobación antes de instalarla.
 - **Usar `pnpm`** para todas las instalaciones.
 

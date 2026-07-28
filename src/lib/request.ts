@@ -1,41 +1,49 @@
-import { toast } from '@nichagiro/ui-primitives'
-
 type RequestOptions = Omit<RequestInit, 'body'> & {
-  errorMessage?: string
-  successMessage?: string
-  body?: unknown
+  data?: unknown
 }
 
 const defaultHeaders: HeadersInit = { 'Content-Type': 'application/json' }
 
-export async function request<T>(url: string, options: RequestOptions = {}): Promise<T> {
-  const { errorMessage, successMessage, headers, body, ...fetchOptions } = options
+async function extractErrorMessage(res: Response): Promise<string> {
+  const data = await res.json().catch(() => null)
+
+  if (res.status === 401) return 'No autorizado'
+  if (!data || typeof data !== 'object') return 'Ha ocurrido un error'
+
+  if ('error' in data && typeof data.error === 'object') {
+    return data.error.description || data.error.message || data.error.detail
+  }
+
+  return data.message || data.error || data.detail || data.description || 'Ha ocurrido un error'
+}
+
+async function request<T>(url: string, options: RequestOptions = {}): Promise<T> {
+  const { data, headers, ...fetchOptions } = options
 
   const res = await fetch(url, {
     ...fetchOptions,
     headers: { ...defaultHeaders, ...headers },
-    body: body != null ? JSON.stringify(body) : undefined,
+    body: data ? JSON.stringify(data) : undefined,
   })
 
-  if (!res.ok) {
-    const data = await res.json().catch(() => ({}))
-    let apiMsg = res.statusText
-
-    if (data && typeof data === 'object') {
-      if ('error' in data && typeof data.error === 'string') {
-        apiMsg = data.error
-      }
-    }
-
-    if (res.status === 401) {
-      apiMsg = 'No autorizado'
-    }
-
-    toast.error(errorMessage || apiMsg)
-    throw new Error(errorMessage || apiMsg)
-  }
-
-  if (successMessage) toast.success(successMessage)
+  if (!res.ok) throw new Error(await extractErrorMessage(res))
 
   return res.json()
 }
+
+request.get = <T>(url: string, options?: RequestOptions) =>
+  request<T>(url, { ...options })
+
+request.post = <T>(url: string, options?: RequestOptions) =>
+  request<T>(url, { ...options, method: 'POST' })
+
+request.put = <T>(url: string, options?: RequestOptions) =>
+  request<T>(url, { ...options, method: 'PUT' })
+
+request.patch = <T>(url: string, options?: RequestOptions) =>
+  request<T>(url, { ...options, method: 'PATCH' })
+
+request.delete = <T>(url: string, options?: RequestOptions) =>
+  request<T>(url, { ...options, method: 'DELETE' })
+
+export { request }

@@ -1,4 +1,4 @@
-import { useProducts } from '../../hooks/useProducts'
+import { useProducts } from '../../hooks/swr/useProducts'
 import { DataTable, Panel } from '@nichagiro/ui-primitives'
 import type { Column } from '@nichagiro/ui-primitives'
 import type { Product } from '../../types/product'
