@@ -1,39 +1,41 @@
 import useSWR from 'swr'
 import useSWRMutation from 'swr/mutation'
+import { useSWRConfig } from 'swr'
 import { getProducts, createProduct, updateProduct, deleteProduct } from '../api/products'
 import type { CreateProductDTO, Product, UpdateProductDTO } from '../types/product'
 
 const PRODUCTS_KEY = 'products'
 
 export function useProducts() {
-  const { data, error, isLoading, mutate } = useSWR<Product[]>(
-    PRODUCTS_KEY,
-    getProducts,
-  )
+  const swr = useSWR<Product[]>(PRODUCTS_KEY, getProducts)
+  console.log("🚀 ~ useProducts ~ swr:", swr)
+  return { ...swr, data: swr.data ?? [] }
+}
 
-  const { trigger: create, isMutating: creating } = useSWRMutation(
+export function useCreateProduct() {
+  const { mutate } = useSWRConfig()
+  return useSWRMutation(
     PRODUCTS_KEY,
     async (_key: string, { arg }: { arg: CreateProductDTO }) => createProduct(arg),
-    { onSuccess: () => mutate() },
+    { onSuccess: () => mutate(PRODUCTS_KEY) },
   )
+}
 
-  const { trigger: update, isMutating: updating } = useSWRMutation(
+export function useUpdateProduct() {
+  const { mutate } = useSWRConfig()
+  return useSWRMutation(
     PRODUCTS_KEY,
     async (_key: string, { arg }: { arg: UpdateProductDTO }) =>
       updateProduct(arg.id, arg.data),
-    { onSuccess: () => mutate() },
+    { onSuccess: () => mutate(PRODUCTS_KEY) },
   )
+}
 
-  const { trigger: remove, isMutating: deleting } = useSWRMutation(
+export function useDeleteProduct() {
+  const { mutate } = useSWRConfig()
+  return useSWRMutation(
     PRODUCTS_KEY,
     async (_key: string, { arg }: { arg: number }) => deleteProduct(arg),
-    { onSuccess: () => mutate() },
+    { onSuccess: () => mutate(PRODUCTS_KEY) },
   )
-
-  return {
-    products: data ?? [], isLoading, error, mutate,
-    create, creating,
-    update, updating,
-    remove, deleting,
-  }
 }

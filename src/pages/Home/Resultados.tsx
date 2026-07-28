@@ -20,13 +20,13 @@ const columns: Column<Product>[] = [
 ]
 
 export function Resultados() {
-  const { products, isLoading } = useProducts()
+  const { data, isLoading } = useProducts()
 
   return (
     <Panel title="Resultados" colorScheme="primary">
       <DataTable
         columns={columns}
-        data={products}
+        data={data}
         keyExtractor={(row) => row.id}
         pageSize={10}
         searchable

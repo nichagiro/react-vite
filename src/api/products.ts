@@ -4,12 +4,12 @@ import type { Product, CreateProductDTO } from '../types/product'
 
 const BASE = `${API_URL}/products`
 
-export function getProducts() {
-  return request<Product[]>(BASE, { errorMessage: 'Error al obtener productos' })
+export async function getProducts() {
+  return await request<Product[]>(BASE, { errorMessage: 'Error al obtener productos' })
 }
 
-export function createProduct(dto: CreateProductDTO) {
-  return request<Product>(BASE, {
+export async function createProduct(dto: CreateProductDTO) {
+  return await request<Product>(BASE, {
     method: 'POST',
     body: dto,
     errorMessage: 'Error al crear producto',
@@ -17,16 +17,16 @@ export function createProduct(dto: CreateProductDTO) {
   })
 }
 
-export function updateProduct(id: number, dto: Partial<CreateProductDTO>) {
-  return request<Product>(`${BASE}/${id}`, {
+export async function updateProduct(id: number, dto: Partial<CreateProductDTO>) {
+  return await request<Product>(`${BASE}/${id}`, {
     method: 'PATCH',
     body: dto,
     errorMessage: 'Error al actualizar producto',
   })
 }
 
-export function deleteProduct(id: number) {
-  return request<boolean>(`${BASE}/${id}`, {
+export async function deleteProduct(id: number) {
+  return await request<boolean>(`${BASE}/${id}`, {
     method: 'DELETE',
     errorMessage: 'Error al eliminar producto',
     successMessage: 'Producto eliminado correctamente',

@@ -32,7 +32,7 @@ export async function request<T>(url: string, options: RequestOptions = {}): Pro
     }
 
     toast.error(errorMessage || apiMsg)
-    throw new Error(apiMsg)
+    throw new Error(errorMessage || apiMsg)
   }
 
   if (successMessage) toast.success(successMessage)
