@@ -17,5 +17,5 @@ export type CreateProductPayload = {
 
 export type UpdateProductPayload = {
   id: number
-  data: Partial<CreateProductPayload>
+  data: CreateProductPayload
 }

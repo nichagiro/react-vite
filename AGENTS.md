@@ -251,6 +251,17 @@ const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({
 
 Los componentes Input, Select, TextArea, Check, RadioGroup aceptan `error?: string` para mostrar validación.
 
+**Acceso a errores en componentes hijos:** Cuando un componente hijo (ej. `Filtros.tsx`) necesita leer errores a través de `useFormContext`, usar `useFormState` en lugar de destructurear `formState` desde `useFormContext`. Esto evita rerenders del árbol completo al cambiar `dirtyFields`/`touchedFields`.
+
+```tsx
+import { useFormState } from 'react-hook-form'
+
+function Filtros() {
+  const { errors } = useFormState<FormValues>({ control: control })
+  // ...
+}
+```
+
 ### Componentes de formulario
 
 - **Input**: `label`, `isRequired`, `error`, `colorScheme`

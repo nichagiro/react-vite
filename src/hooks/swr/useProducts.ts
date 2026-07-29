@@ -27,7 +27,7 @@ export function useUpdateProduct() {
   return useSWRMutation(
     BASE_URL,
     async (url, { arg }: { arg: UpdateProductPayload }) =>
-      request.patch<Product>(`${url}/${arg.id}`, { data: arg.data }),
+      request.put<Product>(`${url}/${arg.id}`, { data: arg.data }),
     { onSuccess: () => mutate(BASE_URL) },
   )
 }
